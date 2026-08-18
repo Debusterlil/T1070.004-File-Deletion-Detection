@@ -36,19 +36,20 @@ detection/
 
 ## Usage
 
-1. Install Sysmon.
-
-2. Apply the provided configuration:
+Apply the provided Sysmon configuration:
 
 ```powershell
-sysmon64.exe -c sysmon-t1070.xml
+sysmon -c .\detection\sysmon-t1070.xml
 ```
 
-3. Run the correlation script:
+Then run the correlation script:
 
 ```powershell
-.\Detect-T1070_004.ps1
+.\detection\Detect-T1070_004.ps1
 ```
+
+The included lab configuration is intentionally scoped to `T1070_004_Test.exe`.
+To test another executable, change both `$TargetPattern` in the PowerShell script and the filename filters in the Sysmon XML.
 
 ## Example result
 
