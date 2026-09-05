@@ -1,80 +1,26 @@
-# MITRE ATT&CK T1070.004 File Deletion Detection PoC
+# Windows File Deletion Detection Lab
 
-PowerShell-based defensive proof of concept for detecting a sequence where an executable is launched and shortly after deleted.
+A DFIR research project focused on detecting **MITRE ATT&CK T1070.004 — File Deletion** activity using Windows telemetry and event correlation.
 
-This repository contains supporting materials for a DFIR research article about **MITRE ATT&CK T1070.004 — File Deletion**.
+This repository contains supporting materials for my article published on Xakep.ru:
 
-## Overview
+**Article:**  
+[Windows Forensic Recovery — Xakep.ru](https://xakep.ru/2026/08/28/windows-forensic-recovery/)
 
-The project demonstrates a simple correlation approach:
+---
 
-1. Sysmon Event ID 1 — Process Creation
-2. Sysmon Event ID 26 — File Delete Detected
-3. Correlation of the same executable path within a defined time window
+## Research Overview
 
-Detection condition:
+This project demonstrates a defensive approach to detecting file deletion activity after execution.
 
-```
-ProcessCreate.Image == FileDeleteDetected.TargetFilename
-```
+The laboratory scenario focuses on correlating Windows telemetry sources to identify suspicious behavior:
 
-and deletion happens within the configured time interval.
+- Sysmon Event ID 1 — Process Creation
+- Sysmon Event ID 26 — File Delete Detected
+- Timeline correlation between execution and deletion events
 
-## Repository structure
+The goal is to demonstrate how defenders can reconstruct attacker activity using endpoint telemetry.
 
-```
-detection/
-├── Detect-T1070_004.ps1
-└── sysmon-t1070.xml
-```
+---
 
-## Requirements
-
-- Windows 10/11
-- Sysmon
-- PowerShell 5+
-
-## Usage
-
-Apply the provided Sysmon configuration:
-
-```powershell
-sysmon -c .\detection\sysmon-t1070.xml
-```
-
-Then run the correlation script:
-
-```powershell
-.\detection\Detect-T1070_004.ps1
-```
-
-The included lab configuration is intentionally scoped to `T1070_004_Test.exe`.
-To test another executable, change both `$TargetPattern` in the PowerShell script and the filename filters in the Sysmon XML.
-
-## Example result
-
-```
-[ALERT] Executed file deleted shortly after launch
-
-Executable          : C:\Users\dfirlab\Desktop\T1070_004_Test.exe
-DeltaSeconds        : 42.999
-ProcessCreateRecord : 356
-FileDeleteRecord    : 360
-```
-
-## Limitations
-
-This project is a laboratory PoC and is not a production SIEM detection rule.
-
-For enterprise environments, similar correlation logic should normally be implemented in SIEM, EDR, or detection engineering pipelines.
-
-## MITRE ATT&CK
-
-Technique:
-
-- T1070.004 — File Deletion
-
-## Safety
-
-The repository contains only defensive detection logic and configuration examples.
-No malware, persistence mechanisms, or destructive functionality are included.
+## Repository Structure
