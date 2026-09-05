@@ -24,3 +24,82 @@ The goal is to demonstrate how defenders can reconstruct attacker activity using
 ---
 
 ## Repository Structure
+
+
+detection/
+├── Detect-T1070_004.ps1
+└── sysmon-t1070.xml
+
+
+---
+
+## Detection Logic
+
+The detection approach correlates:
+
+
+ProcessCreate.Image == FileDeleteDetected.TargetFilename
+
+
+when file deletion occurs within a defined time window after execution.
+
+---
+
+## Requirements
+
+- Windows 10/11
+- Sysmon
+- PowerShell 5+
+
+---
+
+## Usage
+
+Apply the provided Sysmon configuration:
+
+```powershell
+sysmon -c .\detection\sysmon-t1070.xml
+
+Run the detection script:
+
+.\detection\Detect-T1070_004.ps1
+
+Review the correlated events.
+
+Example Detection
+[ALERT] Executed file deleted shortly after launch
+
+Executable:
+C:\Users\dfirlab\Desktop\T1070_004_Test.exe
+
+DeltaSeconds:
+42.999
+
+ProcessCreateRecord:
+356
+
+FileDeleteRecord:
+360
+Limitations
+
+This project is a laboratory proof of concept.
+
+It is not intended to replace enterprise SIEM or EDR detection pipelines.
+
+Production environments should adapt similar correlation logic according to their telemetry architecture.
+
+MITRE ATT&CK
+
+Technique:
+
+T1070.004 — File Deletion
+Author
+
+Vitalii (Debusterlil)
+
+Independent DFIR researcher focused on:
+
+Windows Forensics
+Threat Detection
+Malware Analysis
+Reverse Engineering
